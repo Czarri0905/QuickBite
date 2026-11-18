@@ -1,11 +1,19 @@
 public class OrderItem {
     private int quantity;
+    private MenuItem item;
     private String size;
     private String remarks;
 
+    public OrderItem(MenuItem item, int quantity, String size, String remarks) {
+        this.item = item;
+        this.quantity = quantity;
+        this.size = size;
+        this.remarks = remarks;
+    }
+
     public double getSubtotal() {
         // Implement logic to calculate the subtotal for the order item
-        return 0;
+        return item.getPrice() * quantity;
     }
 
     public void updateQuantity(int qty) {
