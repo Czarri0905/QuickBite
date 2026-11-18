@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuCatalog {
+    // TODO: Add new catalog features here.
     private List<MenuItem> items = new ArrayList<>();
 
     public List<MenuItem> getItems() {
