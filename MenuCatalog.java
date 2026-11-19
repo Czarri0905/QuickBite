@@ -19,7 +19,7 @@ public class MenuCatalog {
 
     public MenuItem getItem(int id) {
         for (MenuItem item : items) {
-            if (item.getId() == id) {
+            if (item.getItemId() == id) {
                 return item;
             }
         }
