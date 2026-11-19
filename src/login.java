@@ -1,94 +1,103 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
+/** Kiosk screen for choosing an order type. */
+class Login extends JFrame {
 
-
-public class Interface extends JFrame {
-    private static final Color NAVY = new Color(31, 48, 69);
-    private static final Color ORANGE = new Color(239, 133, 59);
-
-    public Interface() {
+    public Login() {
         super("QuickBite");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 900);
         setMinimumSize(new Dimension(420, 700));
         setLocationRelativeTo(null);
 
-        JPanel page = new JPanel(new BorderLayout(24, 24));
-        page.setBackground(Color.WHITE);
-        page.setBorder(BorderFactory.createEmptyBorder(48, 44, 28, 44));
-
-        JPanel welcome = new JPanel(new GridLayout(0, 1, 0, 12));
-        welcome.setOpaque(false);
-        JLabel brand = new JLabel("QuickBite", SwingConstants.CENTER);
-        brand.setFont(new Font("SansSerif", Font.BOLD, 30));
-        brand.setForeground(ORANGE);
-        JLabel title = new JLabel("Welcome!", SwingConstants.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 38));
-        title.setForeground(NAVY);
-        JLabel subtitle = new JLabel("How would you like your order?", SwingConstants.CENTER);
-        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 20));
-        subtitle.setForeground(NAVY);
-        welcome.add(brand);
-        welcome.add(title);
-        welcome.add(subtitle);
-
-        JPanel choices = new JPanel(new GridLayout(2, 1, 0, 20));
-        choices.setOpaque(false);
-        javax.swing.JButton dineIn = createChoiceButton("Dine In", "Enjoy your meal here");
-        javax.swing.JButton takeOut = createChoiceButton("Take Out", "Take your order to go");
-        dineIn.addActionListener(event -> openMenu("Dine In"));
-        takeOut.addActionListener(event -> openMenu("Take Out"));
-        choices.add(dineIn);
-        choices.add(takeOut);
-
-        JPanel footer = new JPanel(new BorderLayout(12, 0));
-        footer.setOpaque(false);
-        footer.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(225, 228, 232)));
-        footer.setBorder(BorderFactory.createCompoundBorder(footer.getBorder(),
-                BorderFactory.createEmptyBorder(18, 0, 0, 0)));
-        JComboBox<String> language = new JComboBox<>(new String[]{"English", "Español", "Français"});
-        language.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        language.setToolTipText("Choose a language");
-        javax.swing.JButton accessibility = new javax.swing.JButton("Accessibility");
-        accessibility.setFont(new Font("SansSerif", Font.BOLD, 16));
-        accessibility.addActionListener(event -> {
-            UIManager.put("OptionPane.messageFont", new Font("SansSerif", Font.PLAIN, 18));
-            JOptionPane.showMessageDialog(this,
-                    "For assistance using the kiosk, please ask a team member.",
-                    "Accessibility", JOptionPane.INFORMATION_MESSAGE);
-        });
-        footer.add(language, BorderLayout.WEST);
-        footer.add(accessibility, BorderLayout.EAST);
-
-        page.add(welcome, BorderLayout.NORTH);
-        page.add(choices, BorderLayout.CENTER);
-        page.add(footer, BorderLayout.SOUTH);
+        JPanel page = Design.createPage();
+        page.add(buildWelcome(), BorderLayout.NORTH);
+        page.add(buildChoices(), BorderLayout.CENTER);
+        page.add(buildFooter(), BorderLayout.SOUTH);
         setContentPane(page);
     }
 
-    private javax.swing.JButton createChoiceButton(String title, String detail) {
-        javax.swing.JButton button = new javax.swing.JButton("<html><div style='text-align:center'>"
-                + title + "<br><span style='font-size:14pt;font-weight:normal'>" + detail
-                + "</span></div></html>");
-        button.setFont(new Font("SansSerif", Font.BOLD, 26));
-        button.setForeground(Color.WHITE);
-        button.setBackground(NAVY);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(NAVY, 2, true),
-                BorderFactory.createEmptyBorder(24, 16, 24, 16)));
-        button.setOpaque(true);
-        return button;
+    private JPanel buildWelcome() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+
+        panel.add(Design.createLogo());
+        panel.add(Box.createVerticalStrut(12));
+        panel.add(Design.createLabel("QuickBite", Font.BOLD, 24, Design.ORANGE));
+        panel.add(Box.createVerticalStrut(28));
+        panel.add(Design.createLabel("Welcome!", Font.BOLD, 40, Design.NAVY));
+        panel.add(Box.createVerticalStrut(8));
+        panel.add(Design.createLabel("How would you like your order?", Font.PLAIN, 19, Design.MUTED));
+        return panel;
     }
 
+    private JPanel buildChoices() {
+        JPanel panel = new JPanel(new GridLayout(2, 1, 0, 20));
+        panel.setOpaque(false);
+
+        JButton dineIn = Design.createCardButton(
+                "Dine In", "Enjoy your meal here", Design.NAVY, Design.NAVY_HOVER);
+        JButton takeOut = Design.createCardButton(
+                "Take Out", "Take your order to go", Design.ORANGE, Design.ORANGE_HOVER);
+
+        dineIn.addActionListener(event -> openMenu("Dine In"));
+        takeOut.addActionListener(event -> openMenu("Take Out"));
+
+        panel.add(dineIn);
+        panel.add(takeOut);
+        return panel;
+    }
+
+    private JPanel buildFooter() {
+        JPanel panel = new JPanel(new BorderLayout(12, 0));
+        panel.setOpaque(false);
+
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, Design.LINE),
+                BorderFactory.createEmptyBorder(18, 0, 0, 0)));
+
+        JComboBox<String> language = Design.createComboBox("English", "Español", "Français");
+        language.setToolTipText("Choose a language");
+
+        JButton accessibility = Design.createPillButton("Accessibility");
+        accessibility.addActionListener(event -> showAccessibilityHelp());
+
+        panel.add(language, BorderLayout.WEST);
+        panel.add(accessibility, BorderLayout.EAST);
+        return panel;
+    }
+
+    private void showAccessibilityHelp() {
+        UIManager.put("OptionPane.messageFont", Design.font(Font.PLAIN, 18));
+        JOptionPane.showMessageDialog(this,
+                "For assistance using the kiosk, please ask a team member.",
+                "Accessibility", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /** Opens the menu window. */
     private void openMenu(String orderType) {
-        uiMenu menu = new uiMenu();
-        menu.setVisible(true);
-        dispose();
+        try {
+            Object menu = Class.forName("uiMenu").getDeclaredConstructor().newInstance();
+            if (menu instanceof Window) {
+                ((Window) menu).setVisible(true);
+                dispose();
+            } else {
+                throw new IllegalStateException("uiMenu is not a window");
+            }
+        } catch (ReflectiveOperationException | IllegalStateException exception) {
+            JOptionPane.showMessageDialog(this,
+                    "Unable to open the " + orderType + " menu.",
+                    "Menu unavailable", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void showUi() {
         setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Login().showUi());
     }
 }
