@@ -73,6 +73,10 @@ public class Order {
         );
     }
 
+    public List<OrderItem> getItems() {
+        return new ArrayList<>(items); // Return a copy to prevent external modification
+    }
+
     public void setStatus(OrderStatus status) {
         this.status = status;
     }

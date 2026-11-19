@@ -16,6 +16,10 @@ public class OrderItem {
         return item.getPrice() * quantity;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+    
     public void updateQuantity(int qty) {
         // Implement logic to update the quantity of the order item
         this.quantity = qty;

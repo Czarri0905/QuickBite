@@ -29,8 +29,13 @@ public class KitchenQueue {
     }
 
     public Duration estimateOrderTime(Order order) {
-        // Implement logic to estimate the preparation time for an order
-        // int totalPrepTime = avgPrepMinutes * order.getItems().size();
-        return null; // Placeholder for actual implementation
+        if(order == null) 
+            return Duration.ZERO;
+        
+        int totalQuantity = 0;
+        for(OrderItem item : order.getItems()) {
+            totalQuantity += item.getQuantity();
+        }
+        return Duration.ofMinutes(avgPrepMinutes * totalQuantity); // Estimate time based on average prep time and total quantity of items
     }
 }
