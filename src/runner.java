@@ -1,12 +1,20 @@
-public class runner {
-	public static void main(String[] args) {
-		try {
-			Class<?> login = Class.forName("Login");
-			login.getMethod("main", String[].class).invoke(null, (Object) args);
-		} catch (ClassNotFoundException e) {
-			System.err.println("Login class was not found. Compile login.java first.");
-		} catch (ReflectiveOperationException e) {
-			throw new RuntimeException("Unable to run Login.main", e);
-		}
-	}
+public class run {
+    public static void main(String[] args) {
+        // Set the look and feel to the system default
+		// CATCHING THE PROBLEM!!! hehe
+        try {
+            javax.swing.UIManager.setLookAndFeel(
+                javax.swing.UIManager.getSystemLookAndFeelClassName()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Create and show the login window
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            Login loginWindow = new Login();
+            loginWindow.showUi();
+        });
+    }
+    
 }
