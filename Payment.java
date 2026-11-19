@@ -5,7 +5,7 @@ public abstract class Payment {
     private double amount;
     private Date paymentDate;
 
-    public abstract boolean process();
+    public abstract boolean process(Order order);
     
-    public abstract String getReceiptLine();
+    public abstract String getReceiptLine(Order order);
 }
