@@ -72,4 +72,8 @@ public class Order {
             computeTotal() // Total amount for the order
         );
     }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 }
