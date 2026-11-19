@@ -1,7 +1,6 @@
 public class run {
     public static void main(String[] args) {
         // Set the look and feel to the system default
-		// CATCHING THE PROBLEM!!! hehe
         try {
             javax.swing.UIManager.setLookAndFeel(
                 javax.swing.UIManager.getSystemLookAndFeelClassName()
