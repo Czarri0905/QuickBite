@@ -11,6 +11,7 @@ class Login extends JFrame {
         setMinimumSize(new Dimension(420, 700));
         setLocationRelativeTo(null);
 
+        // DESIGN: Shared page styling and reusable components come from Design.
         JPanel page = Design.createPage();
         page.add(buildWelcome(), BorderLayout.NORTH);
         page.add(buildChoices(), BorderLayout.CENTER);
@@ -76,21 +77,10 @@ class Login extends JFrame {
                 "Accessibility", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /** Opens the menu window. */
+    /** Opens the menu window and carries the selected order type into it. */
     private void openMenu(String orderType) {
-        try {
-            Object menu = Class.forName("uiMenu").getDeclaredConstructor().newInstance();
-            if (menu instanceof Window) {
-                ((Window) menu).setVisible(true);
-                dispose();
-            } else {
-                throw new IllegalStateException("uiMenu is not a window");
-            }
-        } catch (ReflectiveOperationException | IllegalStateException exception) {
-            JOptionPane.showMessageDialog(this,
-                    "Unable to open the " + orderType + " menu.",
-                    "Menu unavailable", JOptionPane.ERROR_MESSAGE);
-        }
+        new uiMenu(orderType).setVisible(true);
+        dispose();
     }
 
     public void showUi() {
