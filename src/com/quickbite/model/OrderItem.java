@@ -1,3 +1,4 @@
+package com.quickbite.model;
 public class OrderItem {
     private int quantity;
     private MenuItem item;

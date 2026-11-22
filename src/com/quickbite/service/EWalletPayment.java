@@ -1,3 +1,6 @@
+package com.quickbite.service;
+import com.quickbite.model.Order;
+
 public class EWalletPayment extends Payment {
     private String provider;
     private String referenceNo;

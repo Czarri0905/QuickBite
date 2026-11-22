@@ -1,3 +1,6 @@
+package com.quickbite.service;
+import com.quickbite.model.Order;
+
 public class CashPayment extends Payment {
     private double amountTendered;
 

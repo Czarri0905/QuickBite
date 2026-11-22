@@ -1,5 +1,8 @@
+package com.quickbite.service;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.quickbite.model.MenuItem;
 
 public class MenuCatalog {
     // TODO: Add new catalog features here.

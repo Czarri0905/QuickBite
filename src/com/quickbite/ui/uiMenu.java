@@ -1,7 +1,13 @@
+package com.quickbite.ui;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.*;
+
+import com.quickbite.model.MenuItem;
+import com.quickbite.model.Order;
+import com.quickbite.model.OrderItem;
+import com.quickbite.service.MenuCatalog;
 
 /** Food menu and order summary for the kiosk. */
 class uiMenu extends JFrame {

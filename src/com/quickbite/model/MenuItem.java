@@ -1,3 +1,4 @@
+package com.quickbite.model;
 public class MenuItem {
     private int itemId;
     private String name;
