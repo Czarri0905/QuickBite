@@ -1,12 +1,27 @@
 public class EWalletPayment extends Payment {
     private String provider;
     private String referenceNo;
+    private double balance;
+
+    public EWalletPayment(String provider, String referenceNo, double balance) {
+        this.provider = provider;
+        this.referenceNo = referenceNo;
+        this.balance = balance; //for class demonstration only
+    }
 
     @Override
     public boolean process(Order order) {
-        // Implement e-wallet payment processing logic here
-        // For example, validate the provider and reference number, and check if the payment is successful
-        return true; // Return true if payment is successful, false otherwise
+
+        if(provider == null || referenceNo == null) {
+            return false;
+        }
+        boolean providerAccepted = (provider.equals("Gcash") || 
+            provider.equals("Maya") 
+            || provider.equals("GrabPay"))
+             ? true : false;
+        boolean referenceProvider = ! referenceNo.trim().isEmpty();
+    
+        return providerAccepted && referenceProvider && balance >= order.computeTotal(); // Return true if payment is successful, false otherwise
     }
     @Override
     public String getReceiptLine(Order order) {
