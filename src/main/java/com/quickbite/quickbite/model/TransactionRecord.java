@@ -1,4 +1,4 @@
-package com.quickbite.model;
+package main.java.com.quickbite.quickbite.model;
 import java.sql.Date;
 
 public class TransactionRecord {

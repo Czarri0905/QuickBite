@@ -1,4 +1,4 @@
-package com.quickbite.ui;
+package main.java.com.quickbite.quickbite.ui;
 import java.awt.*;
 import javax.swing.*;
 

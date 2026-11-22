@@ -1,7 +1,7 @@
-package com.quickbite.service;
+package main.java.com.quickbite.quickbite.service;
 import java.sql.Date;
 
-import com.quickbite.model.Order;
+import main.java.com.quickbite.quickbite.model.Order;
 
 public abstract class Payment {
     private int paymentId;

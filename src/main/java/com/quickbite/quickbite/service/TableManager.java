@@ -1,10 +1,10 @@
-package com.quickbite.service;
+package main.java.com.quickbite.quickbite.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.quickbite.model.DiningTable;
-import com.quickbite.model.Order;
-import com.quickbite.model.enums.TableStatus;
+import main.java.com.quickbite.quickbite.model.DiningTable;
+import main.java.com.quickbite.quickbite.model.Order;
+import main.java.com.quickbite.quickbite.model.enums.TableStatus;
 
 public class TableManager {
     private final List<DiningTable> tables;
