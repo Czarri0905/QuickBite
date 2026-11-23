@@ -1,8 +1,8 @@
-package main.java.com.quickbite.quickbite.model;
+package com.quickbite.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.quickbite.quickbite.model.enums.OrderStatus;
+import com.quickbite.model.enums.OrderStatus;
 
 public class Order {
     private int orderNo;

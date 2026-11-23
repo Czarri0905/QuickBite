@@ -1,7 +1,7 @@
-package main.java.com.quickbite.quickbite.model;
+package com.quickbite.model;
 import java.sql.Date;
 
-import main.java.com.quickbite.quickbite.model.enums.TableStatus;
+import com.quickbite.model.enums.TableStatus;
 
 public class DiningTable {
     private int tableNo;

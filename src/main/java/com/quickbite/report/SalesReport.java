@@ -1,9 +1,9 @@
-package main.java.com.quickbite.quickbite.report;
+package com.quickbite.report;
 import java.util.Collection;
 import java.util.List;
 
-import main.java.com.quickbite.quickbite.model.MenuItem;
-import main.java.com.quickbite.quickbite.model.TransactionRecord;
+import com.quickbite.model.MenuItem;
+import com.quickbite.model.TransactionRecord;
 
 public class SalesReport {
     private Collection<TransactionRecord> transaction;

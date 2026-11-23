@@ -1,4 +1,4 @@
-package main.java.com.quickbite.quickbite.model.enums;
+package com.quickbite.model.enums;
 public enum TableStatus {
     AVAILABLE,
     RESERVED,

@@ -1,4 +1,4 @@
-package main.java.com.quickbite.quickbite.ui;
+package com.quickbite.ui;
 public class run {
     public static void main(String[] args) {
         // Set the look and feel to the system default

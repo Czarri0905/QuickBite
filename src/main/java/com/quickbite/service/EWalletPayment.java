@@ -1,5 +1,5 @@
-package main.java.com.quickbite.quickbite.service;
-import main.java.com.quickbite.quickbite.model.Order;
+package com.quickbite.service;
+import com.quickbite.model.Order;
 
 public class EWalletPayment extends Payment {
     private String provider;

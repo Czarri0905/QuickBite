@@ -1,4 +1,4 @@
-package main.java.com.quickbite.quickbite.model;
+package com.quickbite.model;
 public class OrderItem {
     private int quantity;
     private MenuItem item;

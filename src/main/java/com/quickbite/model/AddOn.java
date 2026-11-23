@@ -1,4 +1,4 @@
-package main.java.com.quickbite.quickbite.model;
+package com.quickbite.model;
 public class AddOn {
 	private String name;
 	private double price;

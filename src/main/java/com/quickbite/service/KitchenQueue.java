@@ -1,10 +1,10 @@
-package main.java.com.quickbite.quickbite.service;
+package com.quickbite.service;
 import java.time.Duration;
 import java.util.List;
 
-import main.java.com.quickbite.quickbite.model.Order;
-import main.java.com.quickbite.quickbite.model.OrderItem;
-import main.java.com.quickbite.quickbite.model.enums.OrderStatus;
+import com.quickbite.model.Order;
+import com.quickbite.model.OrderItem;
+import com.quickbite.model.enums.OrderStatus;
 
 public class KitchenQueue {
     private List<Order> orders;
