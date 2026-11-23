@@ -34,4 +34,8 @@ public class DiningTable {
     public boolean isAvailable(int partySize) {
         return status == TableStatus.AVAILABLE && capacity >= partySize;
     }
+
+    public int getCapacity() {
+        return capacity;
+    }
 }

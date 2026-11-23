@@ -9,6 +9,7 @@ public class Order {
     private String orderType;
     private List<OrderItem> items = new ArrayList<>();
     private OrderStatus status;
+    private DiningTable table;
 
     public Order(int orderNo, String orderType) {
         this.orderNo = orderNo;
@@ -82,5 +83,9 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public void setTable(DiningTable table) {
+        this.table = table;
     }
 }

@@ -34,6 +34,14 @@ public class MenuItem {
         this.available = available;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
     public boolean isAvailable() {
         return available;
     }

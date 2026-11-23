@@ -14,6 +14,9 @@ public class TableManager {
     }
 
     public List<DiningTable> getAvailableTables(int partySize) {
+        if(partySize <= 0) 
+            throw new IllegalArgumentException("Party size must be greater than zero.");
+
         List<DiningTable> availableTables = new ArrayList<>();
         for (DiningTable table : tables) {
             if(table.isAvailable(partySize)) {
@@ -28,8 +31,24 @@ public class TableManager {
             tables.add(table);
     }
 
-    public void assignTable(Order order, DiningTable table) {
-        //Implement method here to assign tables based on available tables
+    public void assignTable(Order order, DiningTable table, int partySize) {
+        List<DiningTable> availableTables = getAvailableTables(partySize);
+
+        if (order == null || table == null)
+            throw new IllegalArgumentException("Order and table cannot be null.");
+
+        if(partySize <= 0)
+            throw new IllegalArgumentException("Party size must be greater than zero.");
+
+        if(partySize > table.getCapacity()) 
+            throw new IllegalArgumentException("Table cannot accommodate the party size.");
+
+        if(!availableTables.contains(table)) 
+            throw new IllegalArgumentException("Table is not available for the given party size.");
+
+        order.setTable(table);
+        table.occupy();
+        
     }
 
     public void estimateTableWait() {
