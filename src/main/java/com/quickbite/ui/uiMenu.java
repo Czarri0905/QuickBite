@@ -1,4 +1,3 @@
-
 package com.quickbite.ui;
 
 import java.awt.*;
@@ -21,17 +20,12 @@ class uiMenu extends JFrame {
     private final Map<MenuItem, OrderItem> orderItems = new LinkedHashMap<>();
     private final Map<MenuItem, JLabel> quantityLabels = new LinkedHashMap<>();
 
-    // COLORS
-    private final Color NAVY = new Color(30, 41, 59);
-    private final Color ORANGE = new Color(249, 115, 22);
-    private final Color MUTED = new Color(120, 130, 145);
-    private final Color LINE = new Color(230, 233, 238);
-    private final Color BG = new Color(247, 248, 250);
-
     // UI COMPONENTS
+    private JPanel categoryPanel;
     private JPanel menuGrid;
     private JPanel orderList;
     private JLabel itemCount;
+    private JLabel estTimeLabel;
     private JLabel totalLabel;
 
     private String selectedCategory = "All";
@@ -48,15 +42,16 @@ class uiMenu extends JFrame {
         setMinimumSize(new Dimension(850, 600));
         setLocationRelativeTo(null);
 
-        // DESIGN: Main application layout
+        // DESIGN: Main application layout using shared Design palette
         JPanel page = new JPanel(new BorderLayout(20, 20));
-        page.setBackground(BG);
+        page.setBackground(Design.BACKGROUND);
         page.setBorder(new EmptyBorder(20, 25, 20, 25));
 
         page.add(buildHeader(), BorderLayout.NORTH);
         page.add(buildMainContent(), BorderLayout.CENTER);
 
         setContentPane(page);
+        refreshCategories();
         refreshMenu();
         refreshOrder();
     }
@@ -70,19 +65,17 @@ class uiMenu extends JFrame {
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
         titlePanel.setOpaque(false);
 
-        JLabel logo = createLabel("QUICKBITE", 18, ORANGE);
-
-        JLabel title = createLabel("Choose Your Food", 27, NAVY);
+        JLabel logo = createLabel("QUICKBITE", 18, Design.ORANGE);
+        JLabel title = createLabel("Choose Your Food", 27, Design.NAVY);
         JLabel subtitle = createSmallLabel(orderType + " order");
 
         titlePanel.add(logo);
-        titlePanel.add(Box.createVerticalStrut(10));
+        titlePanel.add(Box.createVerticalStrut(8));
         titlePanel.add(title);
         titlePanel.add(Box.createVerticalStrut(3));
         titlePanel.add(subtitle);
 
-        JButton back = createButton("Back", Color.WHITE, NAVY);
-
+        JButton back = createSolidButton("Back", Color.WHITE, Design.NAVY, true);
         back.addActionListener(e -> {
             new Login().showUi();
             dispose();
@@ -103,7 +96,10 @@ class uiMenu extends JFrame {
         JPanel menuPanel = new JPanel(new BorderLayout(0, 15));
         menuPanel.setOpaque(false);
 
-        menuPanel.add(buildCategories(), BorderLayout.NORTH);
+        categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        categoryPanel.setOpaque(false);
+
+        menuPanel.add(categoryPanel, BorderLayout.NORTH);
         menuPanel.add(buildMenuArea(), BorderLayout.CENTER);
 
         // RIGHT: ORDER SUMMARY
@@ -116,69 +112,46 @@ class uiMenu extends JFrame {
     }
 
     // CATEGORY BUTTONS
-    private JPanel buildCategories() {
-        JPanel categories = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 8, 0)
-        );
-        categories.setOpaque(false);
+    private void refreshCategories() {
+        categoryPanel.removeAll();
 
         String[] names = {
-            "All",
-            "Burgers",
-            "Fries",
-            "Drinks",
-            "Main Dishes",
-            "Pasta",
-            "Desserts"
+            "All", "Burgers", "Fries", "Drinks", "Main Dishes", "Pasta", "Desserts"
         };
 
         for (String name : names) {
-            JButton button = createCategoryButton(name);
+            boolean selected = selectedCategory.equals(name);
+            JButton button = createSolidButton(
+                    name,
+                    selected ? Design.ORANGE : Color.WHITE,
+                    selected ? Color.WHITE : Design.NAVY,
+                    !selected
+            );
 
             button.addActionListener(e -> {
                 selectedCategory = name;
+                refreshCategories();
                 refreshMenu();
             });
 
-            categories.add(button);
+            categoryPanel.add(button);
         }
 
-        return categories;
-    }
-
-    private JButton createCategoryButton(String name) {
-        boolean selected = selectedCategory.equals(name);
-
-        JButton button = new JButton(name);
-        button.setFont(new Font("Arial", Font.BOLD, 13));
-        button.setForeground(selected ? Color.WHITE : NAVY);
-        button.setBackground(selected ? ORANGE : Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                        selected ? ORANGE : LINE
-                ),
-                new EmptyBorder(9, 15, 9, 15)
-        ));
-
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        return button;
+        categoryPanel.revalidate();
+        categoryPanel.repaint();
     }
 
     // MENU AREA
     private JScrollPane buildMenuArea() {
         menuGrid = new JPanel(new GridLayout(0, 2, 12, 12));
-        menuGrid.setBackground(BG);
+        menuGrid.setBackground(Design.BACKGROUND);
         menuGrid.setBorder(new EmptyBorder(2, 2, 10, 2));
 
         JScrollPane scroll = new JScrollPane(menuGrid);
         scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getViewport().setBackground(BG);
+        scroll.getViewport().setBackground(Design.BACKGROUND);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
-        scroll.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
-        );
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         return scroll;
     }
@@ -189,22 +162,11 @@ class uiMenu extends JFrame {
         quantityLabels.clear();
 
         for (MenuItem item : catalog.getItems()) {
-
             if (!selectedCategory.equals("All")
                     && !item.getCategory().equalsIgnoreCase(selectedCategory)) {
                 continue;
             }
-
             menuGrid.add(buildMenuCard(item));
-        }
-
-        // Recreate category buttons to update selected appearance
-        Component[] components = ((JPanel)
-                ((JPanel) getContentPane().getComponent(1))
-                .getComponent(0)).getComponents();
-
-        if (components.length > 0) {
-            // Category panel is refreshed when the menu is rebuilt
         }
 
         menuGrid.revalidate();
@@ -216,7 +178,7 @@ class uiMenu extends JFrame {
         JPanel card = new JPanel(new BorderLayout(0, 12));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(LINE),
+                BorderFactory.createLineBorder(Design.LINE),
                 new EmptyBorder(15, 15, 15, 15)
         ));
 
@@ -226,8 +188,8 @@ class uiMenu extends JFrame {
         details.setOpaque(false);
 
         JLabel category = createSmallLabel(item.getCategory());
-        JLabel name = createLabel(item.getName(), 17, NAVY);
-        JLabel price = createLabel(formatPrice(item.getPrice()), 15, ORANGE);
+        JLabel name = createLabel(item.getName(), 17, Design.NAVY);
+        JLabel price = createLabel(formatPrice(item.getPrice()), 15, Design.ORANGE);
 
         details.add(category);
         details.add(Box.createVerticalStrut(5));
@@ -239,13 +201,17 @@ class uiMenu extends JFrame {
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         controls.setOpaque(false);
 
-        JLabel quantity = createLabel("0", 15, NAVY);
-        quantity.setPreferredSize(new Dimension(25, 30));
+        OrderItem existing = orderItems.get(item);
+        String initialQty = existing == null ? "0" : String.valueOf(existing.getQuantity());
+
+        JLabel quantity = createLabel(initialQty, 15, Design.NAVY);
+        quantity.setHorizontalAlignment(SwingConstants.CENTER);
+        quantity.setPreferredSize(new Dimension(28, 30));
 
         quantityLabels.put(item, quantity);
 
-        JButton minus = createButton("-", BG, NAVY);
-        JButton plus = createButton("+", ORANGE, Color.WHITE);
+        JButton minus = createSolidButton("-", Design.BACKGROUND, Design.NAVY, true);
+        JButton plus = createSolidButton("+", Design.ORANGE, Color.WHITE, false);
 
         minus.addActionListener(e -> decrementItem(item));
         plus.addActionListener(e -> incrementItem(item));
@@ -256,7 +222,6 @@ class uiMenu extends JFrame {
 
         card.add(details, BorderLayout.CENTER);
         card.add(controls, BorderLayout.SOUTH);
-
         card.setPreferredSize(new Dimension(200, 145));
 
         return card;
@@ -265,20 +230,42 @@ class uiMenu extends JFrame {
     // ORDER PANEL
     private JPanel buildOrderPanel() {
         JPanel panel = new JPanel(new BorderLayout(0, 15));
-        panel.setPreferredSize(new Dimension(280, 0));
+        panel.setPreferredSize(new Dimension(300, 0));
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(LINE),
+                BorderFactory.createLineBorder(Design.LINE),
                 new EmptyBorder(18, 18, 18, 18)
         ));
 
-        JLabel title = createLabel("Your Order", 21, NAVY);
+        JLabel title = createLabel("Your Order", 21, Design.NAVY);
         itemCount = createSmallLabel("0 items");
+
+        // ESTIMATED PREP TIME BADGE
+        estTimeLabel = new JLabel("Est. Time: --") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 237, 213));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        estTimeLabel.setFont(Design.font(Font.BOLD, 12));
+        estTimeLabel.setForeground(Design.ORANGE);
+        estTimeLabel.setBorder(new EmptyBorder(4, 10, 4, 10));
+
+        JPanel metaRow = new JPanel(new BorderLayout());
+        metaRow.setOpaque(false);
+        metaRow.setBorder(new EmptyBorder(6, 0, 0, 0));
+        metaRow.add(itemCount, BorderLayout.WEST);
+        metaRow.add(estTimeLabel, BorderLayout.EAST);
 
         JPanel heading = new JPanel(new BorderLayout());
         heading.setOpaque(false);
         heading.add(title, BorderLayout.NORTH);
-        heading.add(itemCount, BorderLayout.SOUTH);
+        heading.add(metaRow, BorderLayout.SOUTH);
 
         orderList = new JPanel();
         orderList.setLayout(new BoxLayout(orderList, BoxLayout.Y_AXIS));
@@ -289,20 +276,17 @@ class uiMenu extends JFrame {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.getVerticalScrollBar().setUnitIncrement(12);
 
-        JPanel bottom = new JPanel(new BorderLayout(0, 15));
+        JPanel bottom = new JPanel(new BorderLayout(0, 12));
         bottom.setOpaque(false);
 
-        totalLabel = createLabel("PHP 0.00", 22, NAVY);
+        totalLabel = createLabel("PHP 0.00", 22, Design.NAVY);
 
-        JButton review = createButton(
-                "Review Order", ORANGE, Color.WHITE
-        );
-
-        review.setPreferredSize(new Dimension(230, 45));
-        review.addActionListener(e -> reviewOrder());
+        JButton proceed = createSolidButton("Proceed to Payment", Design.ORANGE, Color.WHITE, false);
+        proceed.setPreferredSize(new Dimension(240, 46));
+        proceed.addActionListener(e -> proceedToPayment());
 
         bottom.add(totalLabel, BorderLayout.NORTH);
-        bottom.add(review, BorderLayout.SOUTH);
+        bottom.add(proceed, BorderLayout.SOUTH);
 
         panel.add(heading, BorderLayout.NORTH);
         panel.add(scroll, BorderLayout.CENTER);
@@ -331,10 +315,9 @@ class uiMenu extends JFrame {
             info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
             info.setOpaque(false);
 
-            JLabel name = createLabel(item.getName(), 13, NAVY);
+            JLabel name = createLabel(item.getName(), 13, Design.NAVY);
             JLabel price = createSmallLabel(
-                    orderItem.getQuantity() + " x "
-                    + formatPrice(item.getPrice())
+                    orderItem.getQuantity() + " x " + formatPrice(item.getPrice())
             );
 
             info.add(name);
@@ -344,7 +327,7 @@ class uiMenu extends JFrame {
             JLabel subtotal = createLabel(
                     formatPrice(item.getPrice() * orderItem.getQuantity()),
                     13,
-                    ORANGE
+                    Design.ORANGE
             );
 
             row.add(info, BorderLayout.CENTER);
@@ -354,11 +337,22 @@ class uiMenu extends JFrame {
             orderList.add(new JSeparator());
         }
 
+        int estMinutes = calculateEstimatedTime(count);
+
         itemCount.setText(count + (count == 1 ? " item" : " items"));
+        estTimeLabel.setText(count == 0 ? "Est. Time: --" : "Est. ~" + estMinutes + " mins");
         totalLabel.setText(formatPrice(order.computeTotal()));
 
         orderList.revalidate();
         orderList.repaint();
+    }
+
+    private int calculateEstimatedTime(int totalItems) {
+        if (totalItems <= 0) {
+            return 0;
+        }
+        // Base kitchen prep time of 5 mins + 3 mins per item
+        return 5 + (totalItems * 3);
     }
 
     // ADD ITEM
@@ -401,20 +395,16 @@ class uiMenu extends JFrame {
     // UPDATE QUANTITY LABEL
     private void updateQuantityLabel(MenuItem item) {
         JLabel label = quantityLabels.get(item);
-
         if (label == null) {
             return;
         }
 
         OrderItem orderItem = orderItems.get(item);
-
-        label.setText(orderItem == null
-                ? "0"
-                : String.valueOf(orderItem.getQuantity()));
+        label.setText(orderItem == null ? "0" : String.valueOf(orderItem.getQuantity()));
     }
 
-    // REVIEW ORDER
-    private void reviewOrder() {
+    // PROCEED TO PAYMENT
+    private void proceedToPayment() {
         if (orderItems.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
@@ -425,63 +415,74 @@ class uiMenu extends JFrame {
             return;
         }
 
-        StringBuilder details = new StringBuilder();
+        int totalItems = orderItems.values().stream()
+                .mapToInt(OrderItem::getQuantity)
+                .sum();
+        int estMinutes = calculateEstimatedTime(totalItems);
 
-        details.append(orderType).append(" order:\n\n");
-
-        for (Map.Entry<MenuItem, OrderItem> entry : orderItems.entrySet()) {
-            details.append(entry.getKey().getName())
-                    .append(" x ")
-                    .append(entry.getValue().getQuantity())
-                    .append("\n");
-        }
-
-        details.append("\nTotal: ")
-                .append(formatPrice(order.computeTotal()));
-
-        JOptionPane.showMessageDialog(
-                this,
-                details.toString(),
-                "Order Summary",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        new uiPayment(orderType, order, orderItems, estMinutes).setVisible(true);
+        dispose();
     }
 
     // DESIGN HELPERS
     private JLabel createLabel(String text, int size, Color color) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial", Font.BOLD, size));
+        label.setFont(Design.font(Font.BOLD, size));
         label.setForeground(color);
         return label;
     }
 
     private JLabel createSmallLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial", Font.PLAIN, 12));
-        label.setForeground(MUTED);
+        label.setFont(Design.font(Font.PLAIN, 12));
+        label.setForeground(Design.MUTED);
         return label;
     }
 
-    private JButton createButton(
-            String text, Color background, Color foreground) {
+    /**
+     * Custom-painted button that bypasses WindowsLookAndFeel background overrides.
+     */
+    private JButton createSolidButton(String text, Color bg, Color fg, boolean withBorder) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 13));
-        button.setForeground(foreground);
-        button.setBackground(background);
+                Color fill = bg;
+                if (getModel().isPressed()) {
+                    fill = bg.darker();
+                } else if (getModel().isRollover()) {
+                    fill = bg.equals(Design.ORANGE) ? Design.ORANGE_HOVER : new Color(238, 242, 246);
+                }
+
+                g2.setColor(fill);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+
+                if (withBorder) {
+                    g2.setColor(Design.LINE);
+                    g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
+                }
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        button.setFont(Design.font(Font.BOLD, 13));
+        button.setForeground(fg);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
         button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                        background.equals(Color.WHITE) ? LINE : background
-                ),
-                new EmptyBorder(9, 15, 9, 15)
-        ));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setOpaque(false);
+        button.setRolloverEnabled(true);
+        button.setBorder(new EmptyBorder(9, 15, 9, 15));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         return button;
     }
 
-    private static String formatPrice(double price) {
+    static String formatPrice(double price) {
         return String.format("PHP %,.2f", price);
     }
 
@@ -520,17 +521,13 @@ class uiMenu extends JFrame {
         return catalog;
     }
 
-    private static MenuItem createItem(
-            int id, String name, String category, double price) {
-
+    private static MenuItem createItem(int id, String name, String category, double price) {
         MenuItem item = new MenuItem();
-
         item.setItemId(id);
         item.setName(name);
         item.setCategory(category);
         item.setPrice(price);
         item.setAvailability(true);
-
         return item;
     }
 }
